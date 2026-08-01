@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {
+      "route": "/api/getToken",
+      "allowedRoles": ["anonymous"]
+    }
+  ],
+  "platform": {
+    "apiRuntime": "node:18"
+  }
+}
