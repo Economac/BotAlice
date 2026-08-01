@@ -1,0 +1,9 @@
+{
+  "name": "alicebot-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "getToken/index.js",
+  "dependencies": {
+    "@azure/functions": "^4.0.0"
+  }
+}
