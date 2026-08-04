@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,30 +6,12 @@
   <link rel="icon" type="image/png" href="alice.png" />
   <title>Alice – Especialista en Redes Sociales</title>
 
-  <!-- ============================================================
-       BOT FRAMEWORK WEB CHAT CDN
-       ============================================================ -->
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-
-  <!-- ============================================================
-       MAMMOTH (leer .docx en el navegador)
-       ============================================================ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-
-  <!-- ============================================================
-       PDF.JS (leer .pdf en el navegador)
-       ============================================================ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-  <!-- ============================================================
-       XLSX (leer .xlsx / .xls en el navegador)
-       ============================================================ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
-    /* ============================================================
-       RESET & BASE
-       ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -45,6 +26,111 @@
     }
 
     /* ============================================================
+       PANTALLA DE ACCESO (gate)
+       ============================================================ */
+    #access-gate {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+
+    #access-box {
+      background: #1e1e2e;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #access-box .access-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.45);
+    }
+
+    #access-box .access-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #access-box .access-title {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #access-box .access-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.88rem;
+      text-align: center;
+      margin-bottom: -8px;
+    }
+
+    #access-input {
+      width: 100%;
+      background: #2a2a3e;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #e2e2f0;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      text-align: center;
+      letter-spacing: 2px;
+      transition: border-color 0.2s;
+    }
+
+    #access-input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+    }
+
+    #access-input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0;
+    }
+
+    #access-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    #access-btn:hover { opacity: 0.88; transform: scale(1.02); }
+    #access-btn:active { transform: scale(0.98); }
+
+    #access-error {
+      color: #ef4444;
+      font-size: 0.82rem;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* ============================================================
        WRAPPER PRINCIPAL
        ============================================================ */
     #chat-wrapper {
@@ -56,7 +142,7 @@
     }
 
     /* ============================================================
-       MENSAJE DE BIENVENIDA (encima del contenedor)
+       BANNER DE BIENVENIDA
        ============================================================ */
     #welcome-banner {
       display: flex;
@@ -70,20 +156,20 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-#welcome-banner .avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.35);
-  overflow: hidden;
-  padding: 0;
-}
+    #welcome-banner .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.35);
+      overflow: hidden;
+      padding: 0;
+    }
 
     #welcome-banner .welcome-text h2 {
       color: #fff;
@@ -166,7 +252,6 @@
       border-radius: 10px;
     }
 
-    /* Burbujas de mensaje */
     .msg {
       display: flex;
       flex-direction: column;
@@ -211,7 +296,6 @@
       padding: 0 4px;
     }
 
-    /* Indicador de escritura */
     .typing-indicator {
       display: flex;
       align-items: center;
@@ -238,7 +322,7 @@
     }
 
     /* ============================================================
-       ARCHIVOS ADJUNTOS (preview chips)
+       ARCHIVOS ADJUNTOS
        ============================================================ */
     #attachments-preview {
       display: flex;
@@ -278,7 +362,7 @@
     .attachment-chip .chip-remove:hover { opacity: 1; }
 
     /* ============================================================
-       BARRA DE ENTRADA (estilo ChatGPT)
+       BARRA DE ENTRADA
        ============================================================ */
     #input-bar {
       border-top: 1px solid rgba(255,255,255,0.07);
@@ -302,7 +386,6 @@
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
     }
 
-    /* Botón adjuntar */
     #attach-btn {
       background: none;
       border: none;
@@ -316,7 +399,6 @@
     }
     #attach-btn:hover { color: #a78bfa; }
 
-    /* Textarea */
     #user-input {
       flex: 1;
       background: transparent;
@@ -340,7 +422,6 @@
       border-radius: 4px;
     }
 
-    /* Botón enviar */
     #send-btn {
       background: linear-gradient(135deg, #7c3aed, #4f46e5);
       border: none;
@@ -357,7 +438,6 @@
 
     #send-btn:hover:not(:disabled) { opacity: 0.85; transform: scale(1.05); }
     #send-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
     #send-btn svg { width: 17px; height: 17px; fill: #fff; }
 
     /* ============================================================
@@ -378,7 +458,6 @@
     #char-counter.warn   { color: #f59e0b; }
     #char-counter.danger { color: #ef4444; font-weight: 600; }
 
-    /* Input file oculto */
     #file-input { display: none; }
 
     /* ============================================================
@@ -396,11 +475,32 @@
 </head>
 <body>
 
+  <!-- ============================================================
+       PANTALLA DE ACCESO
+       ============================================================ -->
+  <div id="access-gate">
+    <div id="access-box">
+      <div class="access-avatar">
+        <img src="alice.png" alt="Alice" />
+      </div>
+      <div class="access-title">Alice – Especialista en Redes Sociales</div>
+      <div class="access-label">Escribe el código de prueba</div>
+      <input
+        type="password"
+        id="access-input"
+        placeholder="••••••••••••••••"
+        autocomplete="off"
+      />
+      <button id="access-btn">Usar a Alice - Especialista en redes</button>
+      <div id="access-error"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CHAT PRINCIPAL
+       ============================================================ -->
   <div id="chat-wrapper">
 
-    <!-- ============================================================
-         BANNER DE BIENVENIDA
-         ============================================================ -->
     <div id="welcome-banner">
       <div class="avatar">
         <img src="alice.png" alt="Alice" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
@@ -411,18 +511,13 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         CONTENEDOR PRINCIPAL
-         ============================================================ -->
     <div id="chat-container">
 
-      <!-- Barra de estado de conexión -->
       <div id="connection-status" class="connecting">
         <div class="dot"></div>
         <span class="label">Conectando con Alice…</span>
       </div>
 
-      <!-- Área de mensajes -->
       <div id="messages-area">
         <div class="msg agent">
           <div class="bubble">
@@ -433,21 +528,16 @@
         </div>
       </div>
 
-      <!-- Preview de archivos adjuntos -->
       <div id="attachments-preview"></div>
 
-      <!-- Barra de entrada -->
       <div id="input-bar">
         <div id="input-box">
-
           <button id="attach-btn" title="Adjuntar archivo (PDF, Word, Excel)" aria-label="Adjuntar archivo">
             📎
           </button>
-
           <input type="file" id="file-input"
                  accept=".pdf,.doc,.docx,.xls,.xlsx"
                  multiple />
-
           <textarea
             id="user-input"
             rows="1"
@@ -455,33 +545,27 @@
             aria-label="Mensaje para Alice"
             maxlength="2000"
           ></textarea>
-
           <button id="send-btn" title="Enviar mensaje" aria-label="Enviar" disabled>
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
             </svg>
           </button>
         </div>
-
         <div id="char-counter-row">
           <span id="char-counter">0 / 2000</span>
         </div>
       </div>
 
-    </div><!-- /chat-container -->
-  </div><!-- /chat-wrapper -->
+    </div>
+  </div>
 
-  <!-- ============================================================
-       JAVASCRIPT PRINCIPAL
-       ============================================================ -->
   <script>
     /* ============================================================
        CONFIGURACIÓN
        ============================================================ */
     const CONFIG = {
-      // Endpoint de la Netlify Function (no expone el secret)
       tokenEndpoint: '/api/getToken',
-      maxChars: 2000, 
+      maxChars: 2000,
     };
 
     /* ============================================================
@@ -496,14 +580,14 @@
     /* ============================================================
        REFERENCIAS DOM
        ============================================================ */
-    const messagesArea      = document.getElementById('messages-area');
-    const userInput         = document.getElementById('user-input');
-    const sendBtn           = document.getElementById('send-btn');
-    const attachBtn         = document.getElementById('attach-btn');
-    const fileInput         = document.getElementById('file-input');
-    const charCounter       = document.getElementById('char-counter');
-    const attachPreview     = document.getElementById('attachments-preview');
-    const connectionStatus  = document.getElementById('connection-status');
+    const messagesArea     = document.getElementById('messages-area');
+    const userInput        = document.getElementById('user-input');
+    const sendBtn          = document.getElementById('send-btn');
+    const attachBtn        = document.getElementById('attach-btn');
+    const fileInput        = document.getElementById('file-input');
+    const charCounter      = document.getElementById('char-counter');
+    const attachPreview    = document.getElementById('attachments-preview');
+    const connectionStatus = document.getElementById('connection-status');
 
     /* ============================================================
        BARRA DE ESTADO DE CONEXIÓN
@@ -514,28 +598,18 @@
     }
 
     /* ============================================================
-       INICIALIZAR DIRECT LINE vía Netlify Function
+       INICIALIZAR DIRECT LINE
        ============================================================ */
     async function initDirectLine() {
       setStatus('connecting', 'Conectando con Alice…');
-
       try {
         const res = await fetch(CONFIG.tokenEndpoint, { method: 'POST' });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status} – ${res.statusText}`);
-        }
-
+        if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
         const data = await res.json();
+        if (!data.token) throw new Error('No se recibió token de Direct Line');
 
-        if (!data.token) {
-          throw new Error('No se recibió token de Direct Line');
-        }
-
-        // Crear instancia de Direct Line con el token temporal
         state.directLine = window.WebChat.createDirectLine({ token: data.token });
 
-        // Suscribirse a mensajes entrantes del bot
         state.directLine.activity$
           .filter(activity => activity.type === 'message' && activity.from.role === 'bot')
           .subscribe(
@@ -551,38 +625,21 @@
             }
           );
 
-        // Suscribirse al estado de conexión
         state.directLine.connectionStatus$
           .subscribe(status => {
-            // 0=Uninitialized, 1=Connecting, 2=Online, 3=ExpiredToken, 4=FailedToConnect, 5=Ended
             switch (status) {
-              case 0:
-              case 1:
-                setStatus('connecting', 'Conectando con Alice…');
-                break;
-              case 2:
-                setStatus('connected', 'Alice está en línea ✓');
-                updateSendBtn();
-                break;
-              case 3:
-                setStatus('error', 'Sesión expirada – recarga la página');
-                break;
-              case 4:
-                setStatus('error', 'No se pudo conectar con Alice');
-                break;
-              case 5:
-                setStatus('error', 'Sesión finalizada');
-                break;
+              case 0: case 1: setStatus('connecting', 'Conectando con Alice…'); break;
+              case 2: setStatus('connected', 'Alice está en línea ✓'); updateSendBtn(); break;
+              case 3: setStatus('error', 'Sesión expirada – recarga la página'); break;
+              case 4: setStatus('error', 'No se pudo conectar con Alice'); break;
+              case 5: setStatus('error', 'Sesión finalizada'); break;
             }
           });
 
       } catch (err) {
         console.error('[Alice] Error al inicializar Direct Line:', err);
         setStatus('error', 'Error de conexión – verifica la configuración');
-        appendMessage(
-          'agent',
-          '⚠️ No se pudo conectar con el agente. Por favor recarga la página o contacta al administrador.'
-        );
+        appendMessage('agent', '⚠️ No se pudo conectar con el agente. Por favor recarga la página o contacta al administrador.');
       }
     }
 
@@ -595,7 +652,6 @@
       if (userInput.value.length > CONFIG.maxChars) return;
       if (state.isWaiting || !state.directLine) return;
 
-      // Construir texto con contexto de archivos adjuntos
       let fullText = text;
       if (state.attachedFiles.length > 0) {
         const fileContext = state.attachedFiles
@@ -604,25 +660,20 @@
         fullText += fileContext;
       }
 
-      // Texto visible en la burbuja del usuario
       const displayText = text + (state.attachedFiles.length > 0
         ? `\n📎 ${state.attachedFiles.map(f => f.name).join(', ')}`
         : '');
 
       appendMessage('user', displayText);
-
-      // Limpiar entrada
       userInput.value = '';
       autoResize();
       updateCharCounter();
       clearAttachments();
 
-      // Mostrar indicador de escritura
       state.isWaiting = true;
       updateSendBtn();
       showTypingIndicator();
 
-      // Enviar a Direct Line
       try {
         await state.directLine.postActivity({
           type: 'message',
@@ -644,16 +695,13 @@
     function appendMessage(role, text) {
       const wrapper = document.createElement('div');
       wrapper.className = `msg ${role}`;
-
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
       bubble.textContent = text;
-
       const meta = document.createElement('span');
       meta.className = 'meta';
       const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
       meta.textContent = role === 'user' ? `Tú · ${time}` : `Alice · ${time}`;
-
       wrapper.appendChild(bubble);
       wrapper.appendChild(meta);
       messagesArea.appendChild(wrapper);
@@ -703,7 +751,7 @@
       const len = userInput.value.length;
       charCounter.textContent = `${len} / ${CONFIG.maxChars}`;
       charCounter.classList.remove('warn', 'danger');
-      if (len >= CONFIG.maxChars)            charCounter.classList.add('danger');
+      if (len >= CONFIG.maxChars)             charCounter.classList.add('danger');
       else if (len >= CONFIG.maxChars * 0.85) charCounter.classList.add('warn');
       updateSendBtn();
     }
@@ -712,11 +760,10 @@
        ESTADO DEL BOTÓN ENVIAR
        ============================================================ */
     function updateSendBtn() {
-      const len      = userInput.value.trim().length;
-      const hasFiles = state.attachedFiles.length > 0;
+      const len       = userInput.value.trim().length;
+      const hasFiles  = state.attachedFiles.length > 0;
       const overLimit = userInput.value.length > CONFIG.maxChars;
       const connected = !!state.directLine;
-
       sendBtn.disabled = (!len && !hasFiles) || overLimit || state.isWaiting || !connected;
     }
 
@@ -726,9 +773,7 @@
     attachBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', async (e) => {
-      for (const file of Array.from(e.target.files)) {
-        await processFile(file);
-      }
+      for (const file of Array.from(e.target.files)) await processFile(file);
       fileInput.value = '';
       updateSendBtn();
     });
@@ -737,19 +782,17 @@
       const ext = file.name.split('.').pop().toLowerCase();
       let content = '';
       try {
-        if (ext === 'pdf')                    content = await extractPDF(file);
+        if (ext === 'pdf')                     content = await extractPDF(file);
         else if (ext === 'docx' || ext === 'doc') content = await extractDOCX(file);
         else if (ext === 'xlsx' || ext === 'xls') content = await extractXLSX(file);
         else content = '[Formato no soportado]';
       } catch (err) {
         content = `[Error al leer el archivo: ${err.message}]`;
       }
-
       const MAX_FILE_CHARS = 8000;
       if (content.length > MAX_FILE_CHARS) {
         content = content.substring(0, MAX_FILE_CHARS) + '\n[... contenido truncado ...]';
       }
-
       state.attachedFiles.push({ name: file.name, type: ext, content });
       renderAttachmentChip(file.name, state.attachedFiles.length - 1);
     }
@@ -813,21 +856,18 @@
        EVENTOS DE TECLADO
        ============================================================ */
     userInput.addEventListener('input', () => { autoResize(); updateCharCounter(); });
-
     userInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         if (!sendBtn.disabled) sendMessage();
       }
     });
-
     sendBtn.addEventListener('click', () => { if (!sendBtn.disabled) sendMessage(); });
 
     /* ============================================================
        DRAG & DROP
        ============================================================ */
     const chatContainer = document.getElementById('chat-container');
-
     chatContainer.addEventListener('dragover', (e) => {
       e.preventDefault();
       chatContainer.style.outline = '2px dashed #7c3aed';
@@ -845,10 +885,57 @@
     });
 
     /* ============================================================
-       INICIALIZACIÓN
+       CONTROL DE ACCESO
        ============================================================ */
-    (async function init() {
-      updateCharCounter();
-      await initDirectLine();
+    (function setupAccessGate() {
+      const gate     = document.getElementById('access-gate');
+      const input    = document.getElementById('access-input');
+      const btn      = document.getElementById('access-btn');
+      const errorMsg = document.getElementById('access-error');
+
+      // SHA-256 hash de: alice$test%3SP3CI52026
+      // Genera el tuyo en F12 Console con:
+      // async function h(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+      // h('alice$test%3SP3CI52026').then(console.log)
+      const CODE_HASH = 'f1e13a5c6e2779ff6d0eadab239886165ec63560f42b15c5be24fbdcb8e8fc01';
+
+      async function hashCode(str) {
+        const data = new TextEncoder().encode(str);
+        const buf  = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(buf))
+          .map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      async function validateCode() {
+        const entered = input.value.trim();
+        if (!entered) {
+          errorMsg.textContent = 'Por favor escribe el código.';
+          return;
+        }
+        const enteredHash = await hashCode(entered);
+        if (enteredHash === CODE_HASH) {
+          gate.style.opacity = '0';
+          gate.style.transition = 'opacity 0.4s ease';
+          setTimeout(() => {
+            gate.style.display = 'none';
+            updateCharCounter();
+            initDirectLine();
+          }, 400);
+        } else {
+          errorMsg.textContent = '❌ Código incorrecto. Inténtalo de nuevo.';
+          input.value = '';
+          input.focus();
+          setTimeout(() => { errorMsg.textContent = ''; }, 3000);
+        }
+      }
+
+      btn.addEventListener('click', validateCode);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') validateCode();
+      });
+      input.focus();
     })();
+
   </script>
+</body>
+</html>
