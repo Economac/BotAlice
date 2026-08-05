@@ -276,7 +276,7 @@
       white-space: pre-wrap;
     }
 
-    .msg.user  .bubble {
+    .msg.user .bubble {
       background: linear-gradient(135deg, #7c3aed, #4f46e5);
       color: #fff;
       border-bottom-right-radius: 4px;
@@ -503,11 +503,13 @@
 
     <div id="welcome-banner">
       <div class="avatar">
-        <img src="alice.png" alt="Alice" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+        <img src="alice.png" alt="Alice"
+             style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
       </div>
       <div class="welcome-text">
         <h2>Hola, soy Alice, tu especialista en redes sociales.</h2>
-        <p>Estoy aquí para ayudarte con estrategias, contenido y análisis. ¡Pregúntame lo que necesites!</p>
+        <p>Estoy aquí para ayudarte con estrategias, contenido y análisis.
+           ¡Pregúntame lo que necesites!</p>
       </div>
     </div>
 
@@ -521,8 +523,12 @@
       <div id="messages-area">
         <div class="msg agent">
           <div class="bubble">
-            ¡Hola! 👋 Soy Alice, tu especialista en redes sociales. Puedo ayudarte con estrategias de contenido, análisis de métricas, campañas y mucho más.<br><br>
-            También puedes adjuntar archivos <strong>PDF, Word o Excel</strong> para que los analice y te dé recomendaciones personalizadas. ¿En qué te ayudo hoy?
+            ¡Hola! 👋 Soy Alice, tu especialista en redes sociales.
+            Puedo ayudarte con estrategias de contenido, análisis de métricas,
+            campañas y mucho más.<br><br>
+            También puedes adjuntar archivos <strong>PDF, Word o Excel</strong>
+            para que los analice y te dé recomendaciones personalizadas.
+            ¿En qué te ayudo hoy?
           </div>
           <span class="meta">Alice · ahora</span>
         </div>
@@ -532,12 +538,11 @@
 
       <div id="input-bar">
         <div id="input-box">
-          <button id="attach-btn" title="Adjuntar archivo (PDF, Word, Excel)" aria-label="Adjuntar archivo">
-            📎
-          </button>
+          <button id="attach-btn"
+                  title="Adjuntar archivo (PDF, Word, Excel)"
+                  aria-label="Adjuntar archivo">📎</button>
           <input type="file" id="file-input"
-                 accept=".pdf,.doc,.docx,.xls,.xlsx"
-                 multiple />
+                 accept=".pdf,.doc,.docx,.xls,.xlsx" multiple />
           <textarea
             id="user-input"
             rows="1"
@@ -545,7 +550,8 @@
             aria-label="Mensaje para Alice"
             maxlength="2000"
           ></textarea>
-          <button id="send-btn" title="Enviar mensaje" aria-label="Enviar" disabled>
+          <button id="send-btn" title="Enviar mensaje"
+                  aria-label="Enviar" disabled>
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
             </svg>
@@ -611,7 +617,7 @@
         state.directLine = window.WebChat.createDirectLine({ token: data.token });
 
         state.directLine.activity$
-          .filter(activity => activity.type === 'message' && activity.from.role === 'bot')
+          .filter(a => a.type === 'message' && a.from.role === 'bot')
           .subscribe(
             activity => {
               removeTypingIndicator();
@@ -628,18 +634,26 @@
         state.directLine.connectionStatus$
           .subscribe(status => {
             switch (status) {
-              case 0: case 1: setStatus('connecting', 'Conectando con Alice…'); break;
-              case 2: setStatus('connected', 'Alice está en línea ✓'); updateSendBtn(); break;
-              case 3: setStatus('error', 'Sesión expirada – recarga la página'); break;
-              case 4: setStatus('error', 'No se pudo conectar con Alice'); break;
-              case 5: setStatus('error', 'Sesión finalizada'); break;
+              case 0: case 1:
+                setStatus('connecting', 'Conectando con Alice…'); break;
+              case 2:
+                setStatus('connected', 'Alice está en línea ✓');
+                updateSendBtn(); break;
+              case 3:
+                setStatus('error', 'Sesión expirada – recarga la página'); break;
+              case 4:
+                setStatus('error', 'No se pudo conectar con Alice'); break;
+              case 5:
+                setStatus('error', 'Sesión finalizada'); break;
             }
           });
 
       } catch (err) {
         console.error('[Alice] Error al inicializar Direct Line:', err);
         setStatus('error', 'Error de conexión – verifica la configuración');
-        appendMessage('agent', '⚠️ No se pudo conectar con el agente. Por favor recarga la página o contacta al administrador.');
+        appendMessage('agent',
+          '⚠️ No se pudo conectar con el agente. ' +
+          'Por favor recarga la página o contacta al administrador.');
       }
     }
 
@@ -654,10 +668,9 @@
 
       let fullText = text;
       if (state.attachedFiles.length > 0) {
-        const fileContext = state.attachedFiles
+        fullText += state.attachedFiles
           .map(f => `\n\n--- Archivo adjunto: ${f.name} ---\n${f.content}`)
           .join('');
-        fullText += fileContext;
       }
 
       const displayText = text + (state.attachedFiles.length > 0
@@ -700,7 +713,8 @@
       bubble.textContent = text;
       const meta = document.createElement('span');
       meta.className = 'meta';
-      const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      const time = new Date().toLocaleTimeString('es-ES',
+        { hour: '2-digit', minute: '2-digit' });
       meta.textContent = role === 'user' ? `Tú · ${time}` : `Alice · ${time}`;
       wrapper.appendChild(bubble);
       wrapper.appendChild(meta);
@@ -751,8 +765,8 @@
       const len = userInput.value.length;
       charCounter.textContent = `${len} / ${CONFIG.maxChars}`;
       charCounter.classList.remove('warn', 'danger');
-      if (len >= CONFIG.maxChars)             charCounter.classList.add('danger');
-      else if (len >= CONFIG.maxChars * 0.85) charCounter.classList.add('warn');
+      if (len >= CONFIG.maxChars)              charCounter.classList.add('danger');
+      else if (len >= CONFIG.maxChars * 0.85)  charCounter.classList.add('warn');
       updateSendBtn();
     }
 
@@ -764,7 +778,8 @@
       const hasFiles  = state.attachedFiles.length > 0;
       const overLimit = userInput.value.length > CONFIG.maxChars;
       const connected = !!state.directLine;
-      sendBtn.disabled = (!len && !hasFiles) || overLimit || state.isWaiting || !connected;
+      sendBtn.disabled = (!len && !hasFiles) || overLimit ||
+                          state.isWaiting || !connected;
     }
 
     /* ============================================================
@@ -782,17 +797,20 @@
       const ext = file.name.split('.').pop().toLowerCase();
       let content = '';
       try {
-        if (ext === 'pdf')                     content = await extractPDF(file);
-        else if (ext === 'docx' || ext === 'doc') content = await extractDOCX(file);
-        else if (ext === 'xlsx' || ext === 'xls') content = await extractXLSX(file);
-        else content = '[Formato no soportado]';
+        if (ext === 'pdf')
+          content = await extractPDF(file);
+        else if (ext === 'docx' || ext === 'doc')
+          content = await extractDOCX(file);
+        else if (ext === 'xlsx' || ext === 'xls')
+          content = await extractXLSX(file);
+        else
+          content = '[Formato no soportado]';
       } catch (err) {
         content = `[Error al leer el archivo: ${err.message}]`;
       }
-      const MAX_FILE_CHARS = 8000;
-      if (content.length > MAX_FILE_CHARS) {
-        content = content.substring(0, MAX_FILE_CHARS) + '\n[... contenido truncado ...]';
-      }
+      const MAX = 8000;
+      if (content.length > MAX)
+        content = content.substring(0, MAX) + '\n[... contenido truncado ...]';
       state.attachedFiles.push({ name: file.name, type: ext, content });
       renderAttachmentChip(file.name, state.attachedFiles.length - 1);
     }
@@ -804,7 +822,7 @@
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       let text = '';
       for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
+        const page    = await pdf.getPage(i);
         const content = await page.getTextContent();
         text += content.items.map(item => item.str).join(' ') + '\n';
       }
@@ -821,18 +839,17 @@
       const arrayBuffer = await file.arrayBuffer();
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
       let text = '';
-      workbook.SheetNames.forEach(sheetName => {
-        const sheet = workbook.Sheets[sheetName];
-        text += `[Hoja: ${sheetName}]\n${XLSX.utils.sheet_to_csv(sheet)}\n\n`;
+      workbook.SheetNames.forEach(name => {
+        text += `[Hoja: ${name}]\n${XLSX.utils.sheet_to_csv(workbook.Sheets[name])}\n\n`;
       });
       return text.trim() || '[El archivo Excel no contiene datos extraíbles]';
     }
 
     function renderAttachmentChip(name, index) {
-      const ext = name.split('.').pop().toLowerCase();
+      const ext   = name.split('.').pop().toLowerCase();
       const icons = { pdf: '📄', doc: '📝', docx: '📝', xls: '📊', xlsx: '📊' };
-      const chip = document.createElement('div');
-      chip.className = 'attachment-chip';
+      const chip  = document.createElement('div');
+      chip.className    = 'attachment-chip';
       chip.dataset.index = index;
       chip.innerHTML = `
         <span class="chip-icon">${icons[ext] || '📎'}</span>
@@ -862,7 +879,9 @@
         if (!sendBtn.disabled) sendMessage();
       }
     });
-    sendBtn.addEventListener('click', () => { if (!sendBtn.disabled) sendMessage(); });
+    sendBtn.addEventListener('click', () => {
+      if (!sendBtn.disabled) sendMessage();
+    });
 
     /* ============================================================
        DRAG & DROP
@@ -885,7 +904,7 @@
     });
 
     /* ============================================================
-       CONTROL DE ACCESO
+       CONTROL DE ACCESO — múltiples códigos desde codes.txt
        ============================================================ */
     (function setupAccessGate() {
       const gate     = document.getElementById('access-gate');
@@ -893,28 +912,47 @@
       const btn      = document.getElementById('access-btn');
       const errorMsg = document.getElementById('access-error');
 
-      // SHA-256 hash de: alice$test%3SP3CI52026
-      // Genera el tuyo en F12 Console con:
-      // async function h(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-      // h('alice$test%3SP3CI52026').then(console.log)
-      const CODE_HASH = 'f1e13a5c6e2779ff6d0eadab239886165ec63560f42b15c5be24fbdcb8e8fc01';
+      let validCodes  = [];
+      let attempts    = 0;
+      const MAX_TRIES = 5;
 
-      async function hashCode(str) {
-        const data = new TextEncoder().encode(str);
-        const buf  = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(buf))
-          .map(b => b.toString(16).padStart(2, '0')).join('');
+      async function loadCodes() {
+        try {
+          const res = await fetch('codes.txt?v=' + Date.now());
+          if (!res.ok) throw new Error('No se pudo cargar la lista de códigos');
+          const text = await res.text();
+          validCodes = text
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0);
+        } catch (err) {
+          console.error('[Alice] Error cargando códigos:', err);
+          errorMsg.textContent =
+            'Error al cargar la configuración. Recarga la página.';
+        }
       }
 
       async function validateCode() {
+        if (attempts >= MAX_TRIES) {
+          errorMsg.textContent = '🔒 Demasiados intentos. Recarga la página.';
+          btn.disabled   = true;
+          input.disabled = true;
+          return;
+        }
+
         const entered = input.value.trim();
         if (!entered) {
           errorMsg.textContent = 'Por favor escribe el código.';
           return;
         }
-        const enteredHash = await hashCode(entered);
-        if (enteredHash === CODE_HASH) {
-          gate.style.opacity = '0';
+
+        if (validCodes.length === 0) {
+          errorMsg.textContent = 'Códigos no cargados. Recarga la página.';
+          return;
+        }
+
+        if (validCodes.includes(entered)) {
+          gate.style.opacity    = '0';
           gate.style.transition = 'opacity 0.4s ease';
           setTimeout(() => {
             gate.style.display = 'none';
@@ -922,10 +960,20 @@
             initDirectLine();
           }, 400);
         } else {
-          errorMsg.textContent = '❌ Código incorrecto. Inténtalo de nuevo.';
+          attempts++;
+          const remaining = MAX_TRIES - attempts;
+          errorMsg.textContent = remaining > 0
+            ? `❌ Código incorrecto. Intentos restantes: ${remaining}`
+            : '🔒 Demasiados intentos. Recarga la página.';
+          if (remaining <= 0) {
+            btn.disabled   = true;
+            input.disabled = true;
+          }
           input.value = '';
           input.focus();
-          setTimeout(() => { errorMsg.textContent = ''; }, 3000);
+          if (remaining > 0) {
+            setTimeout(() => { errorMsg.textContent = ''; }, 3000);
+          }
         }
       }
 
@@ -933,7 +981,8 @@
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') validateCode();
       });
-      input.focus();
+
+      loadCodes().then(() => input.focus());
     })();
 
   </script>
